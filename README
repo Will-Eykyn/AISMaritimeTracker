@@ -39,11 +39,11 @@ Description: Python application for live AIS vessel tracking and interactive
         cp .env.example .env
     - Open .env and replace "YOUR_API_KEY_HERE" with your AISStream API key
 
-3. Configure your bounding box
-    - Open config.py and set LAT_MIN, LAT_MAX, LON_MIN, LON_MAX to the
-      geographic area you want to monitor
+3. Run the tracker
 
-4a. Run with Python (recommended)
+    Option A — Python (recommended, fully configurable)
+    - Clone this repo and open config.py to set your bounding box:
+        LAT_MIN, LAT_MAX, LON_MIN, LON_MAX
     - Create and activate a virtual environment:
         python3 -m venv venv
         source venv/bin/activate
@@ -52,10 +52,13 @@ Description: Python application for live AIS vessel tracking and interactive
     - Run the tracker:
         python3 ais_maritime_tracker.py
 
-4b. Run with Docker
+    Option B — Docker (quick start, default bounding box: New England coast)
+    - The Docker image uses a fixed bounding box. To monitor a different
+      region, use Option A instead.
     - Pull and run the pre-built image:
         docker pull willeykyn/aismaritimetracker:latest
-        docker run --rm --env-file .env -v $(pwd):/app willeykyn/aismaritimetracker
+        touch map.html
+        docker run --rm --env-file .env -v $(pwd)/map.html:/app/map.html willeykyn/aismaritimetracker
 
 5. View the map
     - Open map.html in your browser
