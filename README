@@ -1,44 +1,63 @@
 AIS (Automatic Identification System) Maritime Tracker
 -------------------------------------------------------
 Name: William Eykyn
-Date: 1/31/26
+Date: 1/31/26 (updated 6/10/26)
 Project: AIS Maritime Tracking
-Description: Containerized Python application for live AIS vessel tracking and 
-             map visualization.
+Description: Python application for live AIS vessel tracking and interactive
+             map visualization. Streams real-time vessel positions via WebSocket,
+             plots them on an interactive map, and displays vessel details
+             including dimensions, voyage info, and track history.
+
+------ Features ------
+
+- Live vessel positions streamed via AISStream WebSocket API
+- Color-coded markers by AIS class:
+    Red   = Class A (commercial vessels, cargo, tankers, passenger ships)
+    Blue  = Class B (recreational craft, smaller vessels)
+    Pink  = Long Range broadcast
+- Click any vessel to see:
+    - Speed, heading, course over ground
+    - Vessel type, IMO number, call sign
+    - Dimensions (LOA, beam, draft)
+    - Destination and ETA
+- Click "Learn more" in the popup for a full side panel with all details
+- Click vessel again to reveal its track history (trail line + origin dot)
+- Click anywhere on the map to hide trails and close the side panel
+- Auto-reconnects if the stream connection drops
+- Map regenerates every 5 seconds (not on every ping)
 
 ------ Setup ------
 
 1. Obtain a free AISStream API Key
     - Go to: https://aisstream.io/documentation
-    - Scroll to the section titled “Authentication”
-    - Click on "Get Started" button on top of screen & sign in using GitHub
-    - Generate a new AIS API key for free 
+    - Scroll to the section titled "Authentication"
+    - Click "Get Started" at the top of the screen and sign in via GitHub
+    - Generate a free API key
 
 2. Create your environment file
     - Copy the example environment file:
         cp .env.example .env
-    - Open .env and replace: "YOUR_API_KEY_HERE" with your newly generated 
-      AISStream API Key.
+    - Open .env and replace "YOUR_API_KEY_HERE" with your AISStream API key
 
-3. Run directly from Docker Hub 
-    In your terminal, run commands: 
-        - docker pull willeykyn/aismaritimetracker:latest
-        - docker run --rm --env-file .env -v $(pwd):/app willeykyn/aismaritimetracker
+3. Configure your bounding box
+    - Open config.py and set LAT_MIN, LAT_MAX, LON_MIN, LON_MAX to the
+      geographic area you want to monitor
 
-    This will:
-    - Downloads the pre-built Docker image from Docker Hub
-    - Run the containerized AIS tracking script
-    - Generate an interactive map as an HTML file called "map.html"
+4a. Run with Python (recommended)
+    - Create and activate a virtual environment:
+        python3 -m venv venv
+        source venv/bin/activate
+    - Install dependencies:
+        pip install -r requirements.txt
+    - Run the tracker:
+        python3 ais_maritime_tracker.py
 
-4. View the map
-    - Open map.html in your browser to view the live AIS vessel map.
-    - Refresh map periodically to see updated locations and pings from 
-      new vessels.
-    - If you are having issues with the map (such as "403r Access blocked"), 
-      serve the map locally using the following commands:
-        
-        Run: 
-        python3 -m http.server 8000
-        Then open:
-        http://localhost:8000/map.html
+4b. Run with Docker
+    - Pull and run the pre-built image:
+        docker pull willeykyn/aismaritimetracker:latest
+        docker run --rm --env-file .env -v $(pwd):/app willeykyn/aismaritimetracker
 
+5. View the map
+    - Open map.html in your browser
+    - The map updates automatically every 5 seconds — just refresh to see
+      new vessel positions and any newly detected vessels
