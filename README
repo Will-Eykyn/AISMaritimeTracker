@@ -35,9 +35,11 @@ Description: Python application for live AIS vessel tracking and interactive
     - Generate a free API key
 
 2. Create your environment file
-    - Copy the example environment file:
+    - Create a file called .env in your project folder containing:
+        AISSTREAM_TOKEN=your_api_key_here
+    - If you cloned the repo you can instead copy the example file:
         cp .env.example .env
-    - Open .env and replace "YOUR_API_KEY_HERE" with your AISStream API key
+      Then open .env and replace "YOUR_API_KEY_HERE" with your API key
 
 3. Run the tracker
 
